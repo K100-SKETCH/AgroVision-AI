@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AgroVision AI</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>🌿 AgroVision AI</h1>
+
+    <p class="subtitle">
+        AI-Powered Plant Disease Detection System
+    </p>
+
+    <p style="margin-bottom:25px; color:#555;">
+        Upload a leaf image and let AgroVision AI
+        identify plant diseases, provide symptoms,
+        treatment suggestions, and prevention tips.
+    </p>
+
+    <form action="/upload"
+          method="POST"
+          enctype="multipart/form-data">
+
+        <input
+            type="file"
+            name="leaf_image"
+            accept="image/*"
+            required>
+
+        <br><br>
+
+        <button type="submit">
+            🔍 Analyze Leaf
+        </button>
+
+    </form>
+
+    <hr>
+
+    <h3>Supported Plants</h3>
+
+    <p>
+        🍅 Tomato &nbsp;&nbsp;
+        🥔 Potato &nbsp;&nbsp;
+        🫑 Bell Pepper
+    </p>
+
+    <br>
+
+    <h3>Supported Diseases</h3>
+
+    <p>
+        Early Blight, Late Blight,
+        Bacterial Spot, Leaf Mold,
+        Septoria Leaf Spot,
+        Target Spot, Spider Mites,
+        Mosaic Virus and more.
+    </p>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Prediction Result</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<div class="container">
+
+    <h1>🌿 AgroVision AI</h1>
+
+    <h2>Prediction Result</h2>
+
+    <img src="/{{ image_path }}"
+         width="450"
+         alt="Uploaded Leaf">
+
+    <br><br>
+
+    <h3>Disease:</h3>
+
+    {% if "Healthy" in disease %}
+        <p style="color:green; font-size:32px; font-weight:bold;">
+            {{ disease }}
+        </p>
+    {% else %}
+        <p style="color:red; font-size:32px; font-weight:bold;">
+            {{ disease }}
+        </p>
+    {% endif %}
+
+    <h3>Confidence:</h3>
+
+    <p style="font-size:28px;">
+        {{ "%.2f"|format(confidence) }}%
+    </p>
+
+    <h3>Prediction Reliability:</h3>
+<p>{{ reliability }}</p>
+
+<h3>Analyzed On:</h3>
+<p>{{ analysis_time }}</p>
+
+    <h3>Prediction Reliability:</h3>
+
+    {% if confidence >= 90 %}
+        <p style="color:green; font-weight:bold;">
+            High Confidence
+        </p>
+
+    {% elif confidence >= 70 %}
+        <p style="color:orange; font-weight:bold;">
+            Medium Confidence
+        </p>
+
+    {% else %}
+        <p style="color:red; font-weight:bold;">
+            Low Confidence
+        </p>
+    {% endif %}
+
+    <hr>
+
+    <h3>Symptoms</h3>
+    <p>{{ symptoms }}</p>
+
+    <h3>Treatment</h3>
+    <p>{{ treatment }}</p>
+
+    <h3>Prevention</h3>
+    <p>{{ prevention }}</p>
+
+    <br>
+
+    <a href="/">Analyze Another Leaf</a>
+
+</div>
+
+</body>
+</html>
