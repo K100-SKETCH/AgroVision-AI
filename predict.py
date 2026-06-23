@@ -86,19 +86,19 @@ def predict_disease(image_path):
             flush=True
         )
 
-        print("STEP 6: Starting model.predict()", flush=True)
+        print("STEP 6: Starting direct inference", flush=True)
 
         predict_start = time.time()
 
-        prediction = model.predict(
+        prediction = model(
             img_array,
-            verbose=0
-        )
+            training=False
+        ).numpy()
 
         predict_end = time.time()
 
         print(
-            f"STEP 7: model.predict completed in {round(predict_end-predict_start,2)} sec",
+            f"STEP 7: Inference completed in {round(predict_end-predict_start,2)} sec",
             flush=True
         )
 
