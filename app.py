@@ -1,5 +1,10 @@
 from flask import Flask, render_template, request
 import os
+import time
+from datetime import datetime
+
+from predict import predict_disease
+from disease_info import DISEASE_INFO
 
 app = Flask(__name__)
 
@@ -15,12 +20,6 @@ def home():
     return render_template("index.html")
 
 
-@app.route("/test")
-def test():
-    print("TEST ROUTE HIT", flush=True)
-    return "Flask is working"
-
-
 @app.route("/upload", methods=["POST"])
 def upload():
 
@@ -32,10 +31,7 @@ def upload():
         image = request.files.get("leaf_image")
 
         if image is None:
-            print("NO IMAGE RECEIVED", flush=True)
             return "No image uploaded"
-
-        print("IMAGE RECEIVED:", image.filename, flush=True)
 
         filename = image.filename
 
@@ -44,19 +40,45 @@ def upload():
             filename
         )
 
-        print("SAVING IMAGE...", flush=True)
-
         image.save(filepath)
 
-        print("IMAGE SAVED:", filepath, flush=True)
+        print("IMAGE SAVED", flush=True)
 
-        print("UPLOAD TEST SUCCESS", flush=True)
+        disease, confidence = predict_disease(filepath)
 
-        return f"""
-        <h1>Upload Successful ✅</h1>
-        <p>File: {filename}</p>
-        <p>Saved at: {filepath}</p>
-        """
+        info = DISEASE_INFO.get(
+            disease,
+            {
+                "symptoms": "Information not available",
+                "treatment": "Information not available",
+                "prevention": "Information not available"
+            }
+        )
+
+        confidence = round(confidence, 2)
+
+        if confidence >= 90:
+            reliability = "High Confidence"
+        elif confidence >= 70:
+            reliability = "Medium Confidence"
+        else:
+            reliability = "Low Confidence"
+
+        analysis_time = datetime.now().strftime(
+            "%d-%m-%Y %H:%M"
+        )
+
+        return render_template(
+            "result.html",
+            disease=disease,
+            confidence=confidence,
+            reliability=reliability,
+            analysis_time=analysis_time,
+            image_path=filepath,
+            symptoms=info["symptoms"],
+            treatment=info["treatment"],
+            prevention=info["prevention"]
+        )
 
     except Exception as e:
 
