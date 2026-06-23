@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html>
 <head>
+
     <title>AgroVision AI</title>
 
     <link rel="stylesheet"
           href="{{ url_for('static', filename='css/style.css') }}">
+
 </head>
 
 <body>
@@ -17,15 +19,17 @@
         AI-Powered Plant Disease Detection System
     </p>
 
-    <p style="margin-bottom:25px; color:#555;">
+    <p style="margin-bottom:25px;color:#555;">
         Upload a leaf image and let AgroVision AI
-        identify plant diseases, provide symptoms,
-        treatment suggestions, and prevention tips.
+        identify plant diseases.
     </p>
 
-    <form action="/upload"
-          method="POST"
-          enctype="multipart/form-data">
+    <form
+        action="/upload"
+        method="POST"
+        enctype="multipart/form-data"
+        onsubmit="showLoading()"
+    >
 
         <input
             type="file"
@@ -35,35 +39,59 @@
 
         <br><br>
 
-        <button type="submit">
+        <button
+            id="analyzeBtn"
+            type="submit">
+
             🔍 Analyze Leaf
+
         </button>
 
     </form>
+
+    <p
+        id="loadingText"
+        style="
+        display:none;
+        color:green;
+        font-weight:bold;
+        margin-top:20px;">
+
+        ⏳ Analyzing image...
+        Please wait 10-30 seconds.
+
+    </p>
 
     <hr>
 
     <h3>Supported Plants</h3>
 
     <p>
-        🍅 Tomato &nbsp;&nbsp;
-        🥔 Potato &nbsp;&nbsp;
+        🍅 Tomato
+        🥔 Potato
         🫑 Bell Pepper
     </p>
 
-    <br>
-
-    <h3>Supported Diseases</h3>
-
-    <p>
-        Early Blight, Late Blight,
-        Bacterial Spot, Leaf Mold,
-        Septoria Leaf Spot,
-        Target Spot, Spider Mites,
-        Mosaic Virus and more.
-    </p>
-
 </div>
+
+<script>
+
+function showLoading(){
+
+    document.getElementById(
+        "loadingText"
+    ).style.display = "block";
+
+    document.getElementById(
+        "analyzeBtn"
+    ).disabled = true;
+
+    document.getElementById(
+        "analyzeBtn"
+    ).innerHTML = "Analyzing...";
+}
+
+</script>
 
 </body>
 </html>
