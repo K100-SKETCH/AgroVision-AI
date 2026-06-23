@@ -1,6 +1,10 @@
+import tensorflow as tf
+
+tf.config.threading.set_inter_op_parallelism_threads(1)
+tf.config.threading.set_intra_op_parallelism_threads(1)
+
 import numpy as np
 from PIL import Image
-
 from tensorflow.keras.models import load_model
 
 print("Loading model...", flush=True)
@@ -30,6 +34,7 @@ CLASS_NAMES = [
     "Tomato Healthy"
 ]
 
+
 def predict_disease(image_path):
 
     print("=" * 60, flush=True)
@@ -39,22 +44,44 @@ def predict_disease(image_path):
 
     img = img.resize((224, 224))
 
-    x = np.array(img).astype("float32")
+    x = np.array(img).astype(np.float32)
 
-    x = np.expand_dims(x, axis=0)
+    x = np.expand_dims(
+        x,
+        axis=0
+    )
 
-    print("BEFORE MODEL.PREDICT", flush=True)
+    print("BEFORE MODEL CALL", flush=True)
 
-    pred = model.predict(x, verbose=0)
+    pred = model(
+        x,
+        training=False
+    )
 
-    print("AFTER MODEL.PREDICT", flush=True)
+    print("MODEL CALL FINISHED", flush=True)
 
-    predicted_index = int(np.argmax(pred[0]))
+    pred = pred.numpy()
 
-    confidence = float(np.max(pred[0]) * 100)
+    print("NUMPY CONVERSION FINISHED", flush=True)
+
+    predicted_index = int(
+        np.argmax(pred[0])
+    )
+
+    confidence = float(
+        np.max(pred[0]) * 100
+    )
 
     disease = CLASS_NAMES[predicted_index]
 
-    print("PREDICTION COMPLETE", flush=True)
+    print(
+        f"DISEASE = {disease}",
+        flush=True
+    )
+
+    print(
+        f"CONFIDENCE = {confidence}",
+        flush=True
+    )
 
     return disease, confidence
