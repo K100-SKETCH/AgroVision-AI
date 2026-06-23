@@ -26,25 +26,37 @@ def upload():
     print("=" * 60, flush=True)
     print("UPLOAD REQUEST RECEIVED", flush=True)
 
+    start_time = time.time()
+
     try:
 
         image = request.files.get("leaf_image")
 
-        if image is None:
+        if not image:
+            print("NO IMAGE RECEIVED", flush=True)
             return "No image uploaded"
 
-        filename = image.filename
+        print(f"IMAGE RECEIVED: {image.filename}", flush=True)
 
         filepath = os.path.join(
             app.config["UPLOAD_FOLDER"],
-            filename
+            image.filename
         )
+
+        print("SAVING IMAGE...", flush=True)
 
         image.save(filepath)
 
-        print("IMAGE SAVED", flush=True)
+        print(f"IMAGE SAVED: {filepath}", flush=True)
+
+        print("CALLING PREDICT_DISEASE()", flush=True)
 
         disease, confidence = predict_disease(filepath)
+
+        print("PREDICTION RETURNED", flush=True)
+
+        print(f"DISEASE: {disease}", flush=True)
+        print(f"CONFIDENCE: {confidence}", flush=True)
 
         info = DISEASE_INFO.get(
             disease,
@@ -68,6 +80,11 @@ def upload():
             "%d-%m-%Y %H:%M"
         )
 
+        print(
+            f"TOTAL REQUEST TIME: {round(time.time()-start_time,2)} sec",
+            flush=True
+        )
+
         return render_template(
             "result.html",
             disease=disease,
@@ -82,13 +99,20 @@ def upload():
 
     except Exception as e:
 
-        print("ERROR:", str(e), flush=True)
+        print("ERROR IN APP.PY", flush=True)
+        print(str(e), flush=True)
 
-        return f"Error: {str(e)}"
+        return f"ERROR: {str(e)}"
+
+
+@app.route("/test")
+def test():
+    return "Flask is working"
 
 
 if __name__ == "__main__":
     app.run(
         host="0.0.0.0",
-        port=10000
+        port=10000,
+        debug=False
     )
