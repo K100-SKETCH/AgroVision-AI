@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html>
 <head>
+
     <title>Prediction Result</title>
 
     <link rel="stylesheet"
           href="{{ url_for('static', filename='css/style.css') }}">
+
 </head>
+
 <body>
 
 <div class="container">
@@ -23,11 +26,17 @@
     <h3>Disease:</h3>
 
     {% if "Healthy" in disease %}
-        <p style="color:green; font-size:32px; font-weight:bold;">
+        <p style="
+            color:green;
+            font-size:32px;
+            font-weight:bold;">
             {{ disease }}
         </p>
     {% else %}
-        <p style="color:red; font-size:32px; font-weight:bold;">
+        <p style="
+            color:red;
+            font-size:32px;
+            font-weight:bold;">
             {{ disease }}
         </p>
     {% endif %}
@@ -39,43 +48,70 @@
     </p>
 
     <h3>Prediction Reliability:</h3>
-<p>{{ reliability }}</p>
-
-<h3>Analyzed On:</h3>
-<p>{{ analysis_time }}</p>
-
-    <h3>Prediction Reliability:</h3>
 
     {% if confidence >= 90 %}
-        <p style="color:green; font-weight:bold;">
+        <p style="
+            color:green;
+            font-weight:bold;
+            font-size:18px;">
             High Confidence
         </p>
 
     {% elif confidence >= 70 %}
-        <p style="color:orange; font-weight:bold;">
+        <p style="
+            color:orange;
+            font-weight:bold;
+            font-size:18px;">
             Medium Confidence
         </p>
 
     {% else %}
-        <p style="color:red; font-weight:bold;">
+        <p style="
+            color:red;
+            font-weight:bold;
+            font-size:18px;">
             Low Confidence
         </p>
     {% endif %}
 
+    <h3>Analyzed On:</h3>
+
+    <p>
+        {{ analysis_time }}
+    </p>
+
     <hr>
 
     <h3>Symptoms</h3>
-    <p>{{ symptoms }}</p>
+
+    <p>
+        {{ symptoms }}
+    </p>
 
     <h3>Treatment</h3>
-    <p>{{ treatment }}</p>
+
+    <p>
+        {{ treatment }}
+    </p>
 
     <h3>Prevention</h3>
-    <p>{{ prevention }}</p>
+
+    <p>
+        {{ prevention }}
+    </p>
 
     <br>
 
-    <a href="/">Analyze Another Leaf</a>
+    <a href="/"
+       style="
+       display:inline-block;
+       background:#2e7d32;
+       color:white;
+       text-decoration:none;
+       padding:12px 24px;
+       border-radius:10px;">
+        Analyze Another Leaf
+    </a>
 
 </div>
 
