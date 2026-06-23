@@ -16,15 +16,15 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 @app.route("/")
 def home():
-    print("HOME PAGE OPENED")
+    print("HOME PAGE OPENED", flush=True)
     return render_template("index.html")
 
 
 @app.route("/upload", methods=["POST"])
 def upload():
 
-    print("=" * 60)
-    print("UPLOAD REQUEST RECEIVED")
+    print("=" * 60, flush=True)
+    print("UPLOAD REQUEST RECEIVED", flush=True)
 
     start_time = time.time()
 
@@ -32,38 +32,38 @@ def upload():
 
         image = request.files.get("leaf_image")
 
-        if not image:
-            print("NO IMAGE RECEIVED")
+        if image is None:
+            print("NO IMAGE RECEIVED", flush=True)
             return "No image uploaded"
 
-        print("Image Name:", image.filename)
+        print("IMAGE:", image.filename, flush=True)
+
+        filename = image.filename
 
         filepath = os.path.join(
             app.config["UPLOAD_FOLDER"],
-            image.filename
+            filename
         )
-
-        print("Saving image...")
 
         image.save(filepath)
 
-        print("Image saved at:", filepath)
+        print("IMAGE SAVED", flush=True)
 
         prediction_start = time.time()
 
-        print("STARTING PREDICTION...")
+        print("STARTING MODEL...", flush=True)
 
         disease, confidence = predict_disease(filepath)
 
         prediction_end = time.time()
 
-        print("PREDICTION COMPLETE")
         print(
-            f"Prediction Time: {round(prediction_end - prediction_start, 2)} seconds"
+            f"PREDICTION TIME: {prediction_end - prediction_start:.2f}s",
+            flush=True
         )
 
-        print("Disease:", disease)
-        print("Confidence:", confidence)
+        print("DISEASE:", disease, flush=True)
+        print("CONFIDENCE:", confidence, flush=True)
 
         info = DISEASE_INFO.get(
             disease,
@@ -78,10 +78,8 @@ def upload():
 
         if confidence >= 90:
             reliability = "High Confidence"
-
         elif confidence >= 70:
             reliability = "Medium Confidence"
-
         else:
             reliability = "Low Confidence"
 
@@ -89,10 +87,10 @@ def upload():
             "%d-%m-%Y %H:%M"
         )
 
-        total_time = round(time.time() - start_time, 2)
-
-        print(f"TOTAL REQUEST TIME: {total_time} seconds")
-        print("=" * 60)
+        print(
+            f"TOTAL TIME: {time.time() - start_time:.2f}s",
+            flush=True
+        )
 
         return render_template(
             "result.html",
@@ -108,8 +106,7 @@ def upload():
 
     except Exception as e:
 
-        print("ERROR OCCURRED")
-        print(str(e))
+        print("ERROR:", str(e), flush=True)
 
         return f"Error: {str(e)}"
 
@@ -117,6 +114,5 @@ def upload():
 if __name__ == "__main__":
     app.run(
         host="0.0.0.0",
-        port=10000,
-        debug=True
+        port=10000
     )
