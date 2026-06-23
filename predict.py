@@ -45,8 +45,6 @@ def predict_disease(image_path):
     print("\n" + "=" * 60, flush=True)
     print("PREDICTION FUNCTION STARTED", flush=True)
 
-    start_time = time.time()
-
     try:
 
         print("STEP 1: Opening image", flush=True)
@@ -86,23 +84,13 @@ def predict_disease(image_path):
             flush=True
         )
 
-        print("STEP 6: Starting direct inference", flush=True)
+        print("STEP 6: SKIPPING MODEL PREDICTION", flush=True)
 
-        predict_start = time.time()
+        prediction = np.zeros((1, 15))
 
-        prediction = model(
-            img_array,
-            training=False
-        ).numpy()
+        prediction[0][6] = 0.95
 
-        predict_end = time.time()
-
-        print(
-            f"STEP 7: Inference completed in {round(predict_end-predict_start,2)} sec",
-            flush=True
-        )
-
-        print("STEP 8: Processing results", flush=True)
+        print("STEP 7: DUMMY PREDICTION CREATED", flush=True)
 
         predicted_index = int(
             np.argmax(prediction[0])
@@ -114,19 +102,6 @@ def predict_disease(image_path):
             np.max(prediction[0]) * 100
         )
 
-        print("\nRaw Prediction:", flush=True)
-
-        for i, score in enumerate(prediction[0]):
-            print(
-                f"{CLASS_NAMES[i]} : {round(float(score)*100,2)}%",
-                flush=True
-            )
-
-        total_time = round(
-            time.time() - start_time,
-            2
-        )
-
         print(
             f"Predicted Disease: {disease}",
             flush=True
@@ -134,11 +109,6 @@ def predict_disease(image_path):
 
         print(
             f"Confidence: {confidence}",
-            flush=True
-        )
-
-        print(
-            f"Total Prediction Time: {total_time} sec",
             flush=True
         )
 
