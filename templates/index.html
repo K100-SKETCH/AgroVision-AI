@@ -1,86 +1,162 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>AgroVision AI</title>
 
     <link rel="stylesheet"
           href="{{ url_for('static', filename='css/style.css') }}">
-
 </head>
 
 <body>
 
 <div class="container">
 
-    <h1>🌿 AgroVision AI</h1>
+    <!-- HERO -->
 
-    <p class="subtitle">
-        AI-Powered Plant Disease Detection System
-    </p>
+    <div class="hero">
 
-    <p style="margin-bottom:25px;color:#555;">
-        Upload a leaf image and let AgroVision AI
-        identify plant diseases.
-    </p>
+        <h1>🌿 AgroVision AI</h1>
 
-    <form
-        action="/upload"
-        method="POST"
-        enctype="multipart/form-data"
-        onsubmit="showLoading()"
-    >
+        <p class="subtitle">
+            AI-Powered Plant Disease Detection System
+        </p>
 
-        <input
-            type="file"
-            name="leaf_image"
-            accept="image/*"
-            required>
+        <p class="description">
+            Upload a leaf image and instantly detect diseases using
+            deep learning technology.
+        </p>
 
-        <br><br>
+    </div>
 
-        <button
-            id="analyzeBtn"
-            type="submit">
+    <!-- UPLOAD CARD -->
 
-            🔍 Analyze Leaf
+    <div class="upload-card">
 
-        </button>
+        <form
+            action="/upload"
+            method="POST"
+            enctype="multipart/form-data"
+            onsubmit="showLoading()"
+        >
 
-    </form>
+            <label class="upload-box">
 
-    <p
-        id="loadingText"
-        style="
-        display:none;
-        color:green;
-        font-weight:bold;
-        margin-top:20px;">
+                <input
+                    type="file"
+                    name="leaf_image"
+                    accept="image/*"
+                    required
+                >
 
-        ⏳ Analyzing image...
-        Please wait 10-30 seconds.
+                <div class="upload-content">
+                    📷
+                    <h3>Upload Leaf Image</h3>
+                    <p>Click here to choose a plant leaf image</p>
+                </div>
 
-    </p>
+            </label>
 
-    <hr>
+            <button
+                id="analyzeBtn"
+                type="submit"
+                class="analyze-btn"
+            >
+                🔍 Analyze Leaf
+            </button>
 
-    <h3>Supported Plants</h3>
+        </form>
 
-    <p>
-        🍅 Tomato
-        🥔 Potato
-        🫑 Bell Pepper
-    </p>
+        <div id="loadingText" class="loading-box">
+
+            <div class="loader"></div>
+
+            <p>
+                Analyzing image...
+                Please wait 10–30 seconds
+            </p>
+
+        </div>
+
+    </div>
+
+    <!-- FEATURES -->
+
+    <div class="features">
+
+        <div class="feature-card">
+            ⚡
+            <h3>Fast Detection</h3>
+            <p>Get results within seconds.</p>
+        </div>
+
+        <div class="feature-card">
+            🤖
+            <h3>AI Powered</h3>
+            <p>EfficientNet Deep Learning Model.</p>
+        </div>
+
+        <div class="feature-card">
+            🎯
+            <h3>Accurate Results</h3>
+            <p>Identifies multiple plant diseases.</p>
+        </div>
+
+    </div>
+
+    <!-- SUPPORTED PLANTS -->
+
+    <div class="plants-section">
+
+        <h2>Supported Plants</h2>
+
+        <div class="plants-grid">
+
+            <div class="plant-card">
+                🍅
+                <span>Tomato</span>
+            </div>
+
+            <div class="plant-card">
+                🥔
+                <span>Potato</span>
+            </div>
+
+            <div class="plant-card">
+                🫑
+                <span>Bell Pepper</span>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- FOOTER -->
+
+    <div class="footer">
+
+        <p>
+            AgroVision AI © 2026
+        </p>
+
+        <p>
+            Smart Farming Through Artificial Intelligence
+        </p>
+
+    </div>
 
 </div>
 
 <script>
 
-function showLoading(){
+function showLoading() {
 
     document.getElementById(
         "loadingText"
-    ).style.display = "block";
+    ).style.display = "flex";
 
     document.getElementById(
         "analyzeBtn"
@@ -94,4 +170,5 @@ function showLoading(){
 </script>
 
 </body>
+
 </html>
