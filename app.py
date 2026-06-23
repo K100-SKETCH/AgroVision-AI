@@ -2,6 +2,7 @@ from flask import Flask, render_template, request
 import os
 import time
 from datetime import datetime
+import psutil
 
 from predict import predict_disease
 from disease_info import DISEASE_INFO
@@ -20,6 +21,20 @@ def home():
     return render_template("index.html")
 
 
+@app.route("/memory")
+def memory():
+
+    process = psutil.Process()
+
+    return {
+        "memory_mb":
+        round(
+            process.memory_info().rss / 1024 / 1024,
+            2
+        )
+    }
+
+
 @app.route("/upload", methods=["POST"])
 def upload():
 
@@ -33,7 +48,6 @@ def upload():
         image = request.files.get("leaf_image")
 
         if not image:
-            print("NO IMAGE RECEIVED", flush=True)
             return "No image uploaded"
 
         print(f"IMAGE RECEIVED: {image.filename}", flush=True)
@@ -42,8 +56,6 @@ def upload():
             app.config["UPLOAD_FOLDER"],
             image.filename
         )
-
-        print("SAVING IMAGE...", flush=True)
 
         image.save(filepath)
 
@@ -54,9 +66,6 @@ def upload():
         disease, confidence = predict_disease(filepath)
 
         print("PREDICTION RETURNED", flush=True)
-
-        print(f"DISEASE: {disease}", flush=True)
-        print(f"CONFIDENCE: {confidence}", flush=True)
 
         info = DISEASE_INFO.get(
             disease,
@@ -113,6 +122,5 @@ def test():
 if __name__ == "__main__":
     app.run(
         host="0.0.0.0",
-        port=10000,
-        debug=False
+        port=10000
     )
