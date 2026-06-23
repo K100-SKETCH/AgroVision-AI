@@ -1,45 +1,33 @@
-from PIL import Image
 import time
+import numpy as np
+from PIL import Image
+
+from tensorflow.keras.models import load_model
+
+print("Loading model...")
+
+model = load_model(
+    "model/agrovision_best_model.h5",
+    compile=False
+)
+
+print("Model loaded successfully")
 
 
 def predict_disease(image_path):
 
-    print("=" * 60, flush=True)
-    print("PREDICTION FUNCTION STARTED", flush=True)
+    print("Testing TensorFlow only")
 
-    start_time = time.time()
+    img = Image.open(image_path).convert("RGB")
+    img = img.resize((224, 224))
 
-    try:
+    x = np.array(img).astype("float32")
+    x = np.expand_dims(x, axis=0)
 
-        print("OPENING IMAGE...", flush=True)
+    print("Before inference")
 
-        img = Image.open(image_path)
+    output = model(x, training=False)
 
-        print("CONVERTING RGB...", flush=True)
+    print("After inference")
 
-        img = img.convert("RGB")
-
-        print("RESIZING...", flush=True)
-
-        img = img.resize((224, 224))
-
-        print(
-            f"IMAGE SIZE: {img.size}",
-            flush=True
-        )
-
-        print(
-            f"PREDICTION FINISHED IN {round(time.time()-start_time,2)} sec",
-            flush=True
-        )
-
-        return "Tomato Early Blight", 95.0
-
-    except Exception as e:
-
-        print(
-            f"ERROR INSIDE predict.py: {str(e)}",
-            flush=True
-        )
-
-        raise e
+    return "Test", 99.0
