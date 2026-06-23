@@ -2,6 +2,7 @@ from flask import Flask, render_template, request
 import os
 import time
 from datetime import datetime
+from zoneinfo import ZoneInfo
 import psutil
 
 from predict import predict_disease
@@ -85,9 +86,10 @@ def upload():
         else:
             reliability = "Low Confidence"
 
-        analysis_time = datetime.now().strftime(
-            "%d-%m-%Y %H:%M"
-        )
+        # IST TIME FIX
+        analysis_time = datetime.now(
+            ZoneInfo("Asia/Kolkata")
+        ).strftime("%d-%m-%Y %I:%M %p")
 
         print(
             f"TOTAL REQUEST TIME: {round(time.time()-start_time,2)} sec",
