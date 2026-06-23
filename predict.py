@@ -5,13 +5,21 @@ from PIL import Image
 from tensorflow.keras.models import load_model
 from tensorflow.keras.applications.efficientnet import preprocess_input
 
-
 MODEL_PATH = "model/agrovision_best_model.h5"
 
-print("Loading model...")
-model = load_model(MODEL_PATH)
-print("Model loaded successfully!")
+print("Loading model...", flush=True)
 
+load_start = time.time()
+
+model = load_model(
+    MODEL_PATH,
+    compile=False
+)
+
+print(
+    f"Model loaded successfully in {round(time.time()-load_start,2)} sec",
+    flush=True
+)
 
 CLASS_NAMES = [
     "Pepper Bell Bacterial Spot",
@@ -34,65 +42,115 @@ CLASS_NAMES = [
 
 def predict_disease(image_path):
 
-    print("=" * 50)
-    print("PREDICTION FUNCTION STARTED")
+    print("\n" + "=" * 60, flush=True)
+    print("PREDICTION FUNCTION STARTED", flush=True)
 
     start_time = time.time()
 
-    print("Opening image...")
-    img = Image.open(image_path).convert("RGB")
+    try:
 
-    print("Resizing image...")
-    img = img.resize((224, 224))
+        print("STEP 1: Opening image", flush=True)
 
-    print("Converting image to numpy array...")
-    img_array = np.array(img)
+        img = Image.open(image_path).convert("RGB")
 
-    print("Adding batch dimension...")
-    img_array = np.expand_dims(img_array, axis=0)
+        print("STEP 2: Resizing image", flush=True)
 
-    print("Preprocessing image...")
-    img_array = preprocess_input(img_array)
+        img = img.resize((224, 224))
 
-    print("Running model.predict()...")
-    predict_start = time.time()
+        print("STEP 3: Converting image to numpy", flush=True)
 
-    prediction = model.predict(
-        img_array,
-        verbose=0
-    )
+        img_array = np.array(img)
 
-    predict_end = time.time()
+        print("STEP 4: Expanding dimensions", flush=True)
 
-    print(
-        f"model.predict() completed in {round(predict_end - predict_start, 2)} seconds"
-    )
-
-    print("\nRaw Prediction:")
-    for i, score in enumerate(prediction[0]):
-        print(
-            CLASS_NAMES[i],
-            ":",
-            round(float(score) * 100, 2),
-            "%"
+        img_array = np.expand_dims(
+            img_array,
+            axis=0
         )
 
-    predicted_index = np.argmax(prediction)
+        print("STEP 5: Preprocessing image", flush=True)
 
-    disease = CLASS_NAMES[predicted_index]
+        img_array = preprocess_input(
+            img_array.astype(np.float32)
+        )
 
-    confidence = float(
-        np.max(prediction) * 100
-    )
+        print(
+            "Input Shape:",
+            img_array.shape,
+            flush=True
+        )
 
-    total_time = round(
-        time.time() - start_time,
-        2
-    )
+        print(
+            "Input Dtype:",
+            img_array.dtype,
+            flush=True
+        )
 
-    print("Predicted Disease:", disease)
-    print("Confidence:", confidence)
-    print(f"Total Prediction Time: {total_time} seconds")
-    print("=" * 50)
+        print("STEP 6: Starting model.predict()", flush=True)
 
-    return disease, confidence
+        predict_start = time.time()
+
+        prediction = model.predict(
+            img_array,
+            verbose=0
+        )
+
+        predict_end = time.time()
+
+        print(
+            f"STEP 7: model.predict completed in {round(predict_end-predict_start,2)} sec",
+            flush=True
+        )
+
+        print("STEP 8: Processing results", flush=True)
+
+        predicted_index = int(
+            np.argmax(prediction[0])
+        )
+
+        disease = CLASS_NAMES[predicted_index]
+
+        confidence = float(
+            np.max(prediction[0]) * 100
+        )
+
+        print("\nRaw Prediction:", flush=True)
+
+        for i, score in enumerate(prediction[0]):
+            print(
+                f"{CLASS_NAMES[i]} : {round(float(score)*100,2)}%",
+                flush=True
+            )
+
+        total_time = round(
+            time.time() - start_time,
+            2
+        )
+
+        print(
+            f"Predicted Disease: {disease}",
+            flush=True
+        )
+
+        print(
+            f"Confidence: {confidence}",
+            flush=True
+        )
+
+        print(
+            f"Total Prediction Time: {total_time} sec",
+            flush=True
+        )
+
+        print("=" * 60, flush=True)
+
+        return disease, confidence
+
+    except Exception as e:
+
+        print(
+            f"ERROR INSIDE predict_disease(): {str(e)}",
+            flush=True
+        )
+
+        raise e
