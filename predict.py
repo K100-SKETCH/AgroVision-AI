@@ -1,4 +1,3 @@
-import time
 import numpy as np
 from PIL import Image
 
@@ -13,53 +12,49 @@ model = load_model(
 
 print("Model loaded successfully", flush=True)
 
+CLASS_NAMES = [
+    "Pepper Bell Bacterial Spot",
+    "Pepper Bell Healthy",
+    "Potato Early Blight",
+    "Potato Late Blight",
+    "Potato Healthy",
+    "Tomato Bacterial Spot",
+    "Tomato Early Blight",
+    "Tomato Late Blight",
+    "Tomato Leaf Mold",
+    "Tomato Septoria Leaf Spot",
+    "Tomato Spider Mites",
+    "Tomato Target Spot",
+    "Tomato Yellow Leaf Curl Virus",
+    "Tomato Mosaic Virus",
+    "Tomato Healthy"
+]
 
 def predict_disease(image_path):
 
     print("=" * 60, flush=True)
     print("FUNCTION ENTERED", flush=True)
 
-    try:
+    img = Image.open(image_path).convert("RGB")
 
-        print("TRY BLOCK STARTED", flush=True)
+    img = img.resize((224, 224))
 
-        print("IMAGE PATH:", image_path, flush=True)
+    x = np.array(img).astype("float32")
 
-        print("OPENING IMAGE...", flush=True)
+    x = np.expand_dims(x, axis=0)
 
-        img = Image.open(image_path)
+    print("BEFORE MODEL.PREDICT", flush=True)
 
-        print("IMAGE OPENED", flush=True)
+    pred = model.predict(x, verbose=0)
 
-        print("CONVERTING RGB...", flush=True)
+    print("AFTER MODEL.PREDICT", flush=True)
 
-        img = img.convert("RGB")
+    predicted_index = int(np.argmax(pred[0]))
 
-        print("RGB COMPLETE", flush=True)
+    confidence = float(np.max(pred[0]) * 100)
 
-        print("RESIZING...", flush=True)
+    disease = CLASS_NAMES[predicted_index]
 
-        img = img.resize((224, 224))
+    print("PREDICTION COMPLETE", flush=True)
 
-        print("RESIZE COMPLETE", flush=True)
-
-        x = np.array(img).astype("float32")
-
-        print("NUMPY CONVERSION COMPLETE", flush=True)
-
-        x = np.expand_dims(x, axis=0)
-
-        print("EXPAND DIMS COMPLETE", flush=True)
-
-        print("RETURNING TEST VALUE", flush=True)
-
-        return "Tomato Healthy", 99.0
-
-    except Exception as e:
-
-        print(
-            f"ERROR INSIDE predict.py: {str(e)}",
-            flush=True
-        )
-
-        raise e
+    return disease, confidence
