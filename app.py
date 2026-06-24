@@ -62,13 +62,13 @@ init_db()
 @app.route("/")
 def home():
 
-```
+
 print("HOME PAGE OPENED", flush=True)
 
 return render_template(
     "index.html"
 )
-```
+
 
 # ==================================================
 
@@ -79,7 +79,7 @@ return render_template(
 @app.route("/memory")
 def memory():
 
-```
+
 process = psutil.Process()
 
 return {
@@ -89,7 +89,7 @@ return {
         2
     )
 }
-```
+
 
 # ==================================================
 
@@ -100,7 +100,7 @@ return {
 @app.route("/upload", methods=["POST"])
 def upload():
 
-```
+
 global LAST_REPORT
 
 print("=" * 60, flush=True)
@@ -253,7 +253,7 @@ except Exception as e:
     )
 
     return f"ERROR: {str(e)}"
-```
+
 
 # ==================================================
 
