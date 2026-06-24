@@ -17,7 +17,7 @@ from reportlab.lib.styles import getSampleStyleSheet
 from predict import predict_disease
 from disease_info import DISEASE_INFO
 
-app = Flask(**name**)
+app = Flask(__name__)
 
 UPLOAD_FOLDER = "static/uploads"
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
