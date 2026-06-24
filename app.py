@@ -32,7 +32,10 @@ LAST_REPORT = {}
 
 # ==================================================
 
+
 def init_db():
+    print("DATABASE INITIALIZED", flush=True)
+
     conn = sqlite3.connect("agrovision.db")
 
     cursor = conn.cursor()
@@ -49,7 +52,9 @@ def init_db():
 
     conn.commit()
     conn.close()
-    
+
+
+init_db()
 
 # ==================================================
 
