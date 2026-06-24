@@ -366,6 +366,70 @@ def history():
         records=records
     )
 
+# ==================================================
+# DASHBOARD
+# ==================================================
+
+@app.route("/dashboard")
+def dashboard():
+
+    conn = sqlite3.connect(
+        "agrovision.db"
+    )
+
+    cursor = conn.cursor()
+
+    cursor.execute(
+        """
+        SELECT
+            disease,
+            confidence
+        FROM history
+        """
+    )
+
+    records = cursor.fetchall()
+
+    conn.close()
+
+    total_analyses = len(records)
+
+    healthy_count = 0
+    diseased_count = 0
+
+    total_confidence = 0
+
+    for disease, confidence in records:
+
+        total_confidence += confidence
+
+        if "healthy" in disease.lower():
+
+            healthy_count += 1
+
+        else:
+
+            diseased_count += 1
+
+    if total_analyses > 0:
+
+        average_confidence = round(
+            total_confidence / total_analyses,
+            2
+        )
+
+    else:
+
+        average_confidence = 0
+
+    return render_template(
+        "dashboard.html",
+        total_analyses=total_analyses,
+        healthy_count=healthy_count,
+        diseased_count=diseased_count,
+        average_confidence=average_confidence
+    )
+
 
 # ==================================================
 
