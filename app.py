@@ -33,9 +33,7 @@ LAST_REPORT = {}
 # ==================================================
 
 def init_db():
-
-
-conn = sqlite3.connect("agrovision.db")
+    conn = sqlite3.connect("agrovision.db")
 
 cursor = conn.cursor()
 
