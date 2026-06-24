@@ -17,7 +17,7 @@ from reportlab.lib.styles import getSampleStyleSheet
 from predict import predict_disease
 from disease_info import DISEASE_INFO
 
-app = Flask(**name**)
+app = Flask(__name__)
 
 UPLOAD_FOLDER = "static/uploads"
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
@@ -34,7 +34,7 @@ LAST_REPORT = {}
 
 def init_db():
 
-```
+
 conn = sqlite3.connect("agrovision.db")
 
 cursor = conn.cursor()
@@ -51,7 +51,7 @@ cursor.execute("""
 
 conn.commit()
 conn.close()
-```
+
 
 init_db()
 
@@ -266,7 +266,7 @@ except Exception as e:
 @app.route("/download-report")
 def download_report():
 
-```
+
 pdf_file = "AgroVision_Report.pdf"
 
 doc = SimpleDocTemplate(
@@ -351,7 +351,7 @@ return send_file(
     pdf_file,
     as_attachment=True
 )
-```
+
 
 # ==================================================
 
@@ -362,7 +362,7 @@ return send_file(
 @app.route("/history")
 def history():
 
-```
+
 conn = sqlite3.connect(
     "agrovision.db"
 )
@@ -389,7 +389,7 @@ return render_template(
     "history.html",
     records=records
 )
-```
+
 
 # ==================================================
 
@@ -400,9 +400,9 @@ return render_template(
 @app.route("/test")
 def test():
 
-```
+
 return "Flask is working"
-```
+
 
 # ==================================================
 
@@ -410,11 +410,11 @@ return "Flask is working"
 
 # ==================================================
 
-if **name** == "**main**":
+if __name__ == "__main__":
 
-```
+
 app.run(
     host="0.0.0.0",
     port=10000
 )
-```
+
