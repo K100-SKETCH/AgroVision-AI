@@ -13,6 +13,8 @@
 
 <div class="container">
 
+    <!-- HERO -->
+
     <div class="hero">
 
         <h1>🌿 AgroVision AI</h1>
@@ -72,7 +74,7 @@
 
     </div>
 
-    <!-- CONFIDENCE SECTION -->
+    <!-- STATS -->
 
     <div class="features">
 
@@ -147,9 +149,77 @@
 
     </div>
 
+    <!-- TOP 3 PREDICTIONS -->
+
+    <div class="feature-card"
+         style="
+         margin-top:40px;
+         padding:30px;">
+
+        <h3>🏆 Top 3 Predictions</h3>
+
+        <table style="
+               width:100%;
+               margin-top:20px;
+               border-collapse:collapse;">
+
+            <tr style="
+                background:#f5f5f5;">
+
+                <th style="padding:12px;">
+                    Rank
+                </th>
+
+                <th style="padding:12px;">
+                    Disease
+                </th>
+
+                <th style="padding:12px;">
+                    Confidence
+                </th>
+
+            </tr>
+
+            {% for item in top3_predictions %}
+
+            <tr>
+
+                <td style="
+                    padding:12px;
+                    border-bottom:1px solid #ddd;">
+
+                    {{ loop.index }}
+
+                </td>
+
+                <td style="
+                    padding:12px;
+                    border-bottom:1px solid #ddd;">
+
+                    {{ item.name }}
+
+                </td>
+
+                <td style="
+                    padding:12px;
+                    border-bottom:1px solid #ddd;">
+
+                    {{ item.confidence }}%
+
+                </td>
+
+            </tr>
+
+            {% endfor %}
+
+        </table>
+
+    </div>
+
     <!-- REPORT SECTION -->
 
-    <div class="features" style="margin-top:50px;">
+    <div class="features"
+         style="margin-top:50px;">
 
         <div class="feature-card">
 
@@ -183,7 +253,7 @@
 
     </div>
 
-    <!-- RECOMMENDATION -->
+    <!-- AI RECOMMENDATION -->
 
     <div class="upload-card"
          style="
@@ -199,15 +269,18 @@
             <p>
                 Your plant appears healthy.
                 Continue proper watering,
-                nutrition and regular monitoring.
+                balanced nutrition,
+                and regular monitoring.
             </p>
 
         {% else %}
 
             <p>
                 Disease symptoms have been detected.
-                Apply the suggested treatment
-                and monitor plant condition regularly.
+                Apply the suggested treatment,
+                monitor plant condition regularly,
+                and remove heavily infected leaves
+                if necessary.
             </p>
 
         {% endif %}
