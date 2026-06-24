@@ -3,14 +3,12 @@
 <html>
 <head>
 
-```
-<title>AgroVision AI - Dashboard</title>
+    <title>AgroVision AI - Dashboard</title>
 
-<link rel="stylesheet"
-      href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-```
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 </head>
 
@@ -18,157 +16,162 @@
 
 <div class="container">
 
-```
-<!-- HERO -->
+    <!-- HERO -->
 
-<div class="hero">
+    <div class="hero">
 
-    <h1>📊 AgroVision Dashboard</h1>
+        <h1>📊 AgroVision Dashboard</h1>
 
-    <p class="subtitle">
-        Analytics & Prediction Statistics
-    </p>
-
-</div>
-
-<!-- STATS -->
-
-<div class="features" style="margin-top:40px;">
-
-    <div class="feature-card">
-
-        <h3>🌿 Total Analyses</h3>
-
-        <h2 style="color:#2e7d32;">
-            {{ total_analyses }}
-        </h2>
+        <p class="subtitle">
+            Analytics & Prediction Statistics
+        </p>
 
     </div>
 
-    <div class="feature-card">
+    <!-- STATS -->
 
-        <h3>✅ Healthy Plants</h3>
+    <div class="features" style="margin-top:40px;">
 
-        <h2 style="color:#2e7d32;">
-            {{ healthy_count }}
-        </h2>
+        <div class="feature-card">
 
-    </div>
+            <h3>🌿 Total Analyses</h3>
 
-    <div class="feature-card">
+            <h2 style="color:#2e7d32;">
+                {{ total_analyses }}
+            </h2>
 
-        <h3>⚠ Diseased Plants</h3>
+        </div>
 
-        <h2 style="color:#d32f2f;">
-            {{ diseased_count }}
-        </h2>
+        <div class="feature-card">
 
-    </div>
+            <h3>✅ Healthy Plants</h3>
 
-</div>
+            <h2 style="color:#2e7d32;">
+                {{ healthy_count }}
+            </h2>
 
-<!-- AVERAGE CONFIDENCE -->
+        </div>
 
-<div class="feature-card"
-     style="
-     margin-top:40px;
-     padding:35px;">
+        <div class="feature-card">
 
-    <h3>🎯 Average Confidence</h3>
+            <h3>⚠ Diseased Plants</h3>
 
-    <h1 style="
-        color:#2e7d32;
-        margin-top:15px;">
+            <h2 style="color:#d32f2f;">
+                {{ diseased_count }}
+            </h2>
 
-        {{ average_confidence }}%
-
-    </h1>
-
-</div>
-
-<!-- CONFIDENCE BAR -->
-
-<div style="margin-top:40px;">
-
-    <h3>Average Model Confidence</h3>
-
-    <div style="
-        width:100%;
-        height:30px;
-        background:#e0e0e0;
-        border-radius:20px;
-        overflow:hidden;">
-
-        <div style="
-            width:{{ average_confidence }}%;
-            height:100%;
-            background:#2e7d32;">
         </div>
 
     </div>
 
-</div>
+    <!-- AVERAGE CONFIDENCE -->
 
-<!-- PIE CHART -->
+    <div class="feature-card"
+         style="
+         margin-top:40px;
+         padding:35px;">
 
-<div class="feature-card"
-     style="
-     margin-top:50px;
-     padding:35px;">
+        <h3>🎯 Average Confidence</h3>
 
-    <h2 style="
-        color:#2e7d32;
-        margin-bottom:25px;">
+        <h1 style="
+            color:#2e7d32;
+            margin-top:15px;">
 
-        🥧 Disease Distribution
+            {{ average_confidence }}%
 
-    </h2>
-
-    <div style="
-        max-width:500px;
-        margin:auto;">
-
-        <canvas id="diseaseChart"></canvas>
+        </h1>
 
     </div>
 
-</div>
+    <!-- CONFIDENCE BAR -->
 
-<!-- BUTTONS -->
+    <div style="margin-top:40px;">
 
-<div style="
-    margin-top:50px;
-    display:flex;
-    gap:20px;
-    justify-content:center;
-    flex-wrap:wrap;">
+        <h3 style="
+            text-align:center;
+            color:#2e7d32;
+            margin-bottom:15px;">
 
-    <a href="/"
-       style="
-       text-decoration:none;
-       padding:15px 25px;
-       background:#2e7d32;
-       color:white;
-       border-radius:10px;">
+            Average Model Confidence
 
-       🏠 Home
+        </h3>
 
-    </a>
+        <div style="
+            width:100%;
+            height:30px;
+            background:#e0e0e0;
+            border-radius:20px;
+            overflow:hidden;">
 
-    <a href="/history"
-       style="
-       text-decoration:none;
-       padding:15px 25px;
-       background:#1565c0;
-       color:white;
-       border-radius:10px;">
+            <div style="
+                width:{{ average_confidence }}%;
+                height:100%;
+                background:#2e7d32;">
+            </div>
 
-       📜 History
+        </div>
 
-    </a>
+    </div>
 
-</div>
-```
+    <!-- PIE CHART -->
+
+    <div class="feature-card"
+         style="
+         margin-top:50px;
+         padding:35px;">
+
+        <h2 style="
+            color:#2e7d32;
+            margin-bottom:25px;">
+
+            🥧 Disease Distribution
+
+        </h2>
+
+        <div style="
+            max-width:600px;
+            margin:auto;">
+
+            <canvas id="diseaseChart"></canvas>
+
+        </div>
+
+    </div>
+
+    <!-- BUTTONS -->
+
+    <div style="
+        margin-top:50px;
+        display:flex;
+        gap:20px;
+        justify-content:center;
+        flex-wrap:wrap;">
+
+        <a href="/"
+           style="
+           text-decoration:none;
+           padding:15px 25px;
+           background:#2e7d32;
+           color:white;
+           border-radius:10px;">
+
+           🏠 Home
+
+        </a>
+
+        <a href="/history"
+           style="
+           text-decoration:none;
+           padding:15px 25px;
+           background:#1565c0;
+           color:white;
+           border-radius:10px;">
+
+           📜 History
+
+        </a>
+
+    </div>
 
 </div>
 
@@ -197,16 +200,16 @@ new Chart(
 
                 backgroundColor: [
 
-                    '#2e7d32',
-                    '#43a047',
-                    '#66bb6a',
-                    '#81c784',
-                    '#a5d6a7',
-                    '#d32f2f',
-                    '#f57c00',
-                    '#1565c0',
-                    '#6a1b9a',
-                    '#00897b'
+                    '#4CAF50',
+                    '#F44336',
+                    '#2196F3',
+                    '#FF9800',
+                    '#9C27B0',
+                    '#009688',
+                    '#795548',
+                    '#3F51B5',
+                    '#E91E63',
+                    '#607D8B'
 
                 ]
 
@@ -222,6 +225,36 @@ new Chart(
                 legend: {
 
                     position: 'bottom'
+
+                },
+
+                tooltip: {
+
+                    callbacks: {
+
+                        label: function(context) {
+
+                            let total =
+                                context.dataset.data.reduce(
+                                    (a, b) => a + b,
+                                    0
+                                );
+
+                            let value =
+                                context.raw;
+
+                            let percent =
+                                (
+                                    value / total * 100
+                                ).toFixed(1);
+
+                            return context.label +
+                                   ": " +
+                                   percent +
+                                   "%";
+                        }
+
+                    }
 
                 }
 
