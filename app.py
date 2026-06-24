@@ -1,4 +1,6 @@
-from flask import Flask, render_template, request, send_file
+from flask import Flask, render_template, request, send_file, Response
+
+import csv
 import os
 import time
 import sqlite3
@@ -364,6 +366,44 @@ def history():
     return render_template(
         "history.html",
         records=records
+    )
+
+@app.route("/download-csv")
+def download_csv():
+
+    conn = sqlite3.connect("agrovision.db")
+
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT
+            disease,
+            confidence,
+            image_path,
+            analysis_time
+        FROM history
+        ORDER BY id DESC
+    """)
+
+    rows = cursor.fetchall()
+
+    conn.close()
+
+    def generate():
+
+        yield "Disease,Confidence,Image Path,Analysis Time\n"
+
+        for row in rows:
+
+            yield f"{row[0]},{row[1]},{row[2]},{row[3]}\n"
+
+    return Response(
+        generate(),
+        mimetype="text/csv",
+        headers={
+            "Content-Disposition":
+            "attachment; filename=agrovision_history.csv"
+        }
     )
 
 # ==================================================
