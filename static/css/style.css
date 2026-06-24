@@ -451,3 +451,59 @@ a:hover{
     }
 }
 
+/* MODEL INFORMATION */
+
+.model-section{
+
+    margin-top:50px;
+}
+
+.model-section h2{
+
+    color:#2e7d32;
+
+    margin-bottom:25px;
+}
+
+.model-grid{
+
+    display:grid;
+
+    grid-template-columns:
+    repeat(auto-fit,minmax(220px,1fr));
+
+    gap:20px;
+}
+
+.model-card{
+
+    background:#f8fbf8;
+
+    padding:25px;
+
+    border-radius:15px;
+
+    box-shadow:
+    0 5px 15px rgba(0,0,0,0.08);
+
+    transition:0.3s;
+}
+
+.model-card:hover{
+
+    transform:translateY(-5px);
+}
+
+.model-card h3{
+
+    color:#2e7d32;
+
+    margin-bottom:10px;
+}
+
+.model-card p{
+
+    color:#555;
+
+    font-weight:600;
+}
