@@ -409,7 +409,6 @@ def download_csv():
 # ==================================================
 # DASHBOARD
 # ==================================================
-
 @app.route("/dashboard")
 def dashboard():
 
@@ -439,10 +438,22 @@ def dashboard():
 
     total_confidence = 0
 
+    disease_stats = {}
+
     for disease, confidence in records:
 
         total_confidence += confidence
 
+        # Disease count for pie chart
+        if disease in disease_stats:
+
+            disease_stats[disease] += 1
+
+        else:
+
+            disease_stats[disease] = 1
+
+        # Healthy vs Diseased count
         if "healthy" in disease.lower():
 
             healthy_count += 1
@@ -462,14 +473,23 @@ def dashboard():
 
         average_confidence = 0
 
+    chart_labels = list(
+        disease_stats.keys()
+    )
+
+    chart_values = list(
+        disease_stats.values()
+    )
+
     return render_template(
         "dashboard.html",
         total_analyses=total_analyses,
         healthy_count=healthy_count,
         diseased_count=diseased_count,
-        average_confidence=average_confidence
+        average_confidence=average_confidence,
+        chart_labels=chart_labels,
+        chart_values=chart_values
     )
-
 
 # ==================================================
 
