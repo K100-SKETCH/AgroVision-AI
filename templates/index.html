@@ -43,22 +43,38 @@
             onsubmit="showLoading()"
         >
 
-            <label class="upload-box">
+            <!-- DRAG & DROP AREA -->
+
+            <div class="drop-zone" id="dropZone">
 
                 <input
                     type="file"
+                    id="fileInput"
                     name="leaf_image"
                     accept="image/*"
                     required
+                    hidden
                 >
 
                 <div class="upload-content">
-                    📷
+
+                    <span class="drop-icon">
+                        📷
+                    </span>
+
                     <h3>Upload Leaf Image</h3>
-                    <p>Click here to choose a plant leaf image</p>
+
+                    <p>
+                        Drag & Drop Image Here
+                        <br>
+                        or Click to Upload
+                    </p>
+
+                    <p id="fileName"></p>
+
                 </div>
 
-            </label>
+            </div>
 
             <button
                 id="analyzeBtn"
@@ -88,21 +104,39 @@
     <div class="features">
 
         <div class="feature-card">
+
             ⚡
+
             <h3>Fast Detection</h3>
-            <p>Get results within seconds.</p>
+
+            <p>
+                Get results within seconds.
+            </p>
+
         </div>
 
         <div class="feature-card">
+
             🤖
+
             <h3>AI Powered</h3>
-            <p>EfficientNet Deep Learning Model.</p>
+
+            <p>
+                EfficientNet Deep Learning Model.
+            </p>
+
         </div>
 
         <div class="feature-card">
+
             🎯
+
             <h3>Accurate Results</h3>
-            <p>Identifies multiple plant diseases.</p>
+
+            <p>
+                Identifies multiple plant diseases.
+            </p>
+
         </div>
 
     </div>
@@ -152,7 +186,81 @@
 
 <script>
 
-function showLoading() {
+const dropZone =
+document.getElementById("dropZone");
+
+const fileInput =
+document.getElementById("fileInput");
+
+const fileName =
+document.getElementById("fileName");
+
+
+dropZone.addEventListener(
+    "click",
+    () => fileInput.click()
+);
+
+
+fileInput.addEventListener(
+    "change",
+    function(){
+
+        if(this.files.length > 0){
+
+            fileName.innerHTML =
+            "✅ " +
+            this.files[0].name;
+        }
+    }
+);
+
+
+dropZone.addEventListener(
+    "dragover",
+    function(e){
+
+        e.preventDefault();
+
+        dropZone.classList.add(
+            "dragover"
+        );
+    }
+);
+
+
+dropZone.addEventListener(
+    "dragleave",
+    function(){
+
+        dropZone.classList.remove(
+            "dragover"
+        );
+    }
+);
+
+
+dropZone.addEventListener(
+    "drop",
+    function(e){
+
+        e.preventDefault();
+
+        dropZone.classList.remove(
+            "dragover"
+        );
+
+        fileInput.files =
+        e.dataTransfer.files;
+
+        fileName.innerHTML =
+        "✅ " +
+        e.dataTransfer.files[0].name;
+    }
+);
+
+
+function showLoading(){
 
     document.getElementById(
         "loadingText"
@@ -164,11 +272,11 @@ function showLoading() {
 
     document.getElementById(
         "analyzeBtn"
-    ).innerHTML = "Analyzing...";
+    ).innerHTML =
+    "Analyzing...";
 }
 
 </script>
 
 </body>
-
 </html>
