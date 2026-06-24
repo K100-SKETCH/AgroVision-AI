@@ -64,7 +64,9 @@ def upload():
 
         print("CALLING PREDICT_DISEASE()", flush=True)
 
-        disease, confidence = predict_disease(filepath)
+        disease, confidence, top3_predictions = predict_disease(
+            filepath
+        )
 
         print("PREDICTION RETURNED", flush=True)
 
@@ -86,7 +88,6 @@ def upload():
         else:
             reliability = "Low Confidence"
 
-        # IST TIME FIX
         analysis_time = datetime.now(
             ZoneInfo("Asia/Kolkata")
         ).strftime("%d-%m-%Y %I:%M %p")
@@ -105,7 +106,8 @@ def upload():
             image_path=filepath,
             symptoms=info["symptoms"],
             treatment=info["treatment"],
-            prevention=info["prevention"]
+            prevention=info["prevention"],
+            top3_predictions=top3_predictions
         )
 
     except Exception as e:
