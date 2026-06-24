@@ -61,9 +61,7 @@ init_db()
 
 @app.route("/")
 def home():
-
-
-print("HOME PAGE OPENED", flush=True)
+    print("HOME PAGE OPENED", flush=True)
 
 return render_template(
     "index.html"
@@ -78,9 +76,8 @@ return render_template(
 
 @app.route("/memory")
 def memory():
-
-
-process = psutil.Process()
+    
+    process = psutil.Process()
 
 return {
     "memory_mb":
