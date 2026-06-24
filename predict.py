@@ -74,6 +74,24 @@ def predict_disease(image_path):
 
     disease = CLASS_NAMES[predicted_index]
 
+    # TOP 3 PREDICTIONS
+
+    top3_indices = pred[0].argsort()[-3:][::-1]
+
+    top3_predictions = []
+
+    for idx in top3_indices:
+
+        top3_predictions.append(
+            {
+                "name": CLASS_NAMES[idx],
+                "confidence": round(
+                    float(pred[0][idx] * 100),
+                    2
+                )
+            }
+        )
+
     print(
         f"DISEASE = {disease}",
         flush=True
@@ -84,4 +102,4 @@ def predict_disease(image_path):
         flush=True
     )
 
-    return disease, confidence
+    return disease, confidence, top3_predictions
