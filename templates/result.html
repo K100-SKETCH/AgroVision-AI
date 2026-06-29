@@ -117,11 +117,25 @@
 
         <div class="feature-card">
 
-    <h3>🕒 Analysis Time</h3>
+    <h3>🚨 Disease Severity</h3>
 
-    <p style="font-size:18px;">
-        {{ analysis_time }}
-    </p>
+    <h2 style="color:{{ severity_color }};">
+
+        {% if severity == "Severe" %}
+
+            🔴 Severe
+
+        {% elif severity == "Moderate" %}
+
+            🟡 Moderate
+
+        {% else %}
+
+            🟢 Low
+
+        {% endif %}
+
+    </h2>
 
 </div>
 
