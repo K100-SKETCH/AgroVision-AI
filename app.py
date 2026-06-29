@@ -234,7 +234,11 @@ def upload():
             prevention=info["prevention"],
             recommendation=recommendation["english"],
             recommendation_hindi=recommendation["hindi"],
-            top3_predictions=top3_predictions
+            top3_predictions=top3_predictions,
+            recommendation_english=
+            recommendation["english"],
+            recommendation_hindi=
+            recommendation["hindi"]
         )
 
     except Exception as e:
