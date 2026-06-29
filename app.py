@@ -18,6 +18,7 @@ from reportlab.lib.styles import getSampleStyleSheet
 
 from predict import predict_disease
 from disease_info import DISEASE_INFO
+from recommendation_engine import RECOMMENDATIONS
 from recommendation_engine import get_recommendation
 
 app = Flask(__name__)
