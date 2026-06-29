@@ -48,7 +48,7 @@ def init_db():
         CREATE TABLE IF NOT EXISTS history (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             disease TEXT,
-            confidence REAL,
+            confidence REAL, 
             image_path TEXT,
             analysis_time TEXT
         )
