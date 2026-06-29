@@ -198,3 +198,178 @@ AgroVision-AI/
 ## 📜 Prediction History
 
 ![History](screenshots/history.png)
+
+## ⚙️ Installation
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/K100-SKETCH/AgroVision-AI.git
+```
+
+### 2. Navigate to the project directory
+
+```bash
+cd AgroVision-AI
+```
+
+### 3. Create a virtual environment (Optional but Recommended)
+
+**Windows**
+
+```bash
+python -m venv venv
+venv\Scripts\activate
+```
+
+**Linux / macOS**
+
+```bash
+python3 -m venv venv
+source venv/bin/activate
+```
+
+### 4. Install the required packages
+
+```bash
+pip install -r requirements.txt
+```
+
+### 5. Run the application
+
+```bash
+python app.py
+```
+
+### 6. Open your browser
+
+```
+http://127.0.0.1:5000
+```
+## 📖 Usage
+
+1. Open the AgroVision AI web application.
+2. Upload an image of a plant leaf (Tomato, Potato, or Bell Pepper).
+3. Click **Analyze Leaf**.
+4. Wait a few seconds while the CNN model processes the image.
+5. View the prediction results, including:
+
+   * Detected disease
+   * Confidence score
+   * Disease severity
+   * Top 3 predictions
+   * Symptoms
+   * Treatment methods
+   * Prevention tips
+   * Smart Farmer Recommendations (English & Hindi)
+6. Download the prediction report as a PDF if required.
+7. View previous analyses in the **History** page.
+8. Explore overall prediction statistics in the **Dashboard**.
+
+---
+
+## 🧠 Deep Learning Model
+
+| Property        | Details                            |
+| --------------- | ---------------------------------- |
+| Model Type      | Convolutional Neural Network (CNN) |
+| Framework       | TensorFlow & Keras                 |
+| Dataset         | PlantVillage                       |
+| Supported Crops | Tomato, Potato, Bell Pepper        |
+| Total Classes   | 15                                 |
+| Input Size      | 224 × 224 RGB                      |
+| Output          | Disease Name + Confidence Score    |
+
+---
+
+## 📊 Dataset
+
+The model was trained using the **PlantVillage** dataset, one of the most widely used benchmark datasets for plant disease classification.
+
+**Supported Classes**
+
+* Tomato (10 classes)
+* Potato (3 classes)
+* Bell Pepper (2 classes)
+
+Total Classes: **15**
+
+The dataset contains thousands of labeled leaf images covering both healthy and diseased plants, enabling the CNN model to achieve highly accurate predictions.
+
+---
+
+# 🚀 Future Improvements
+
+The following features are planned for future versions of AgroVision AI:
+
+* 🌾 Support for more crop species
+* 📱 Android application
+* ☁ Cloud database integration
+* 🌍 Multi-language support
+* 🤖 Advanced AI recommendation engine
+* 📷 Live camera disease detection
+* 📍 GPS-based crop monitoring
+* 📈 Farmer analytics dashboard
+* 🔔 Early disease warning notifications
+* 🌐 REST API for third-party integration
+
+---
+
+# 🤝 Contributing
+
+Contributions are welcome!
+
+If you would like to improve AgroVision AI:
+
+1. Fork the repository
+2. Create a new feature branch
+3. Commit your changes
+4. Push your branch
+5. Open a Pull Request
+
+---
+
+# 📄 License
+
+This project is developed for educational and research purposes.
+
+Feel free to use and modify the project for learning, academic work, and research with proper attribution.
+
+---
+
+# 👨‍💻 Author
+
+**Kshitij**
+
+B.Tech Computer Science Engineering
+Manipal University Jaipur
+
+GitHub: https://github.com/K100-SKETCH
+
+---
+
+# ⭐ Show Your Support
+
+If you found this project useful, please consider giving it a ⭐ on GitHub.
+
+Your support motivates further improvements and future AI-based agricultural projects.
+
+---
+
+# 🙏 Acknowledgements
+
+Special thanks to:
+
+* PlantVillage Dataset
+* TensorFlow Team
+* Keras
+* Flask
+* OpenCV
+* Chart.js
+* ReportLab
+* Render
+* GitHub
+
+---
+
+**Made with ❤️ using Artificial Intelligence, Deep Learning, and Computer Vision for Smart Agriculture.**
