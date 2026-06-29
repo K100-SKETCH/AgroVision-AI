@@ -19,7 +19,7 @@ from reportlab.lib.styles import getSampleStyleSheet
 from predict import predict_disease
 from disease_info import DISEASE_INFO
 from recommendation_engine import RECOMMENDATIONS
-from recommendation_engine import get_recommendation
+
 
 app = Flask(__name__)
 
@@ -156,7 +156,13 @@ def upload():
                 "prevention": "Information not available"
             }
         )
-        recommendation = get_recommendation(disease)
+        recommendation = RECOMMENDATIONS.get(
+            disease,
+            {
+                "english": "No recommendation available.",
+                "hindi": "कोई सुझाव उपलब्ध नहीं है।"
+            }
+        )
 
         confidence = round(confidence, 2)
 
