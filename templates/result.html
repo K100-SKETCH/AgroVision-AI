@@ -262,40 +262,65 @@
 
     </div>
 
-    <!-- AI RECOMMENDATION -->
+    <!-- SMART FARMER RECOMMENDATION -->
 
-    <div class="upload-card"
-         style="
-         margin-top:50px;
-         background:#f8fbf8;">
+<div class="feature-card"
+     style="
+     margin-top:50px;
+     padding:35px;
+     text-align:left;">
 
-        <h2 style="color:#2e7d32;">
-            🌱 AI Recommendation
-        </h2>
+    <h2 style="
+        color:#2e7d32;
+        text-align:center;
+        margin-bottom:30px;">
 
-        {% if "Healthy" in disease %}
+        🌱 Smart Farmer Recommendation
 
-            <p>
-                Your plant appears healthy.
-                Continue proper watering,
-                balanced nutrition,
-                regular monitoring,
-                and preventive care.
-            </p>
+    </h2>
 
-        {% else %}
+    <div style="
+        background:#e8f5e9;
+        border-left:6px solid #2e7d32;
+        padding:20px;
+        border-radius:10px;
+        margin-bottom:25px;">
 
-            <p>
-                Disease symptoms have been detected.
-                Apply the recommended treatment,
-                monitor plant condition regularly,
-                remove heavily infected leaves,
-                and follow preventive measures to stop further spread.
-            </p>
+        <h3 style="color:#2e7d32;">
+            🇬🇧 Recommendation (English)
+        </h3>
 
-        {% endif %}
+        <p style="
+            font-size:17px;
+            line-height:1.8;">
+
+            {{ recommendation_english }}
+
+        </p>
 
     </div>
+
+    <div style="
+        background:#fff8e1;
+        border-left:6px solid #ff9800;
+        padding:20px;
+        border-radius:10px;">
+
+        <h3 style="color:#ff9800;">
+            🇮🇳 किसान सलाह (Hindi)
+        </h3>
+
+        <p style="
+            font-size:18px;
+            line-height:1.8;">
+
+            {{ recommendation_hindi }}
+
+        </p>
+
+    </div>
+
+</div>
 
     <!-- BUTTONS -->
 
