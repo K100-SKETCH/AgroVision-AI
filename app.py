@@ -168,12 +168,16 @@ def upload():
 
         if confidence >= 90:
             reliability = "High Confidence"
-
+            severity = "Severe"
+            severity_color = "#d32f2f"
         elif confidence >= 70:
             reliability = "Medium Confidence"
-
+            severity = "Moderate"
+            severity_color = "#f57c00"
         else:
             reliability = "Low Confidence"
+            severity = "Low"
+            severity_color = "#2e7d32"
 
         analysis_time = datetime.now(
             ZoneInfo("Asia/Kolkata")
@@ -227,6 +231,8 @@ def upload():
             disease=disease,
             confidence=confidence,
             reliability=reliability,
+            severity=severity,
+            severity_color=severity_color,
             analysis_time=analysis_time,
             image_path=filepath,
             symptoms=info["symptoms"],
