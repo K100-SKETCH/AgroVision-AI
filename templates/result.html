@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -14,6 +13,72 @@
 
 <div class="container">
 
+    <!-- ================================================== -->
+    <!-- INVALID IMAGE -->
+    <!-- ================================================== -->
+
+    {% if validation_error %}
+
+    <div class="hero">
+
+        <h1>🌿 AgroVision AI</h1>
+
+        <p class="subtitle">
+            Plant Disease Analysis
+        </p>
+
+    </div>
+
+
+    <div class="feature-card"
+         style="
+         margin-top:50px;
+         padding:40px;
+         text-align:center;">
+
+        <h2 style="
+            color:#d32f2f;
+            font-size:36px;">
+
+            ⚠️ Invalid Image
+
+        </h2>
+
+
+        <p style="
+            font-size:20px;
+            margin-top:20px;
+            line-height:1.7;">
+
+            {{ validation_error }}
+
+        </p>
+
+
+        <a href="/"
+           style="
+           display:inline-block;
+           margin-top:25px;
+           background:#2e7d32;
+           color:white;
+           padding:12px 25px;
+           border-radius:10px;
+           text-decoration:none;">
+
+            🔄 Upload Another Image
+
+        </a>
+
+    </div>
+
+
+    <!-- ================================================== -->
+    <!-- NORMAL DISEASE RESULT -->
+    <!-- ================================================== -->
+
+    {% else %}
+
+
     <!-- HERO -->
 
     <div class="hero">
@@ -25,6 +90,7 @@
         </p>
 
     </div>
+
 
     <!-- IMAGE -->
 
@@ -40,7 +106,10 @@
 
     </div>
 
+
+    <!-- ================================================== -->
     <!-- DISEASE CARD -->
+    <!-- ================================================== -->
 
     <div class="feature-card"
          style="
@@ -48,6 +117,7 @@
          padding:35px;">
 
         <h3>Disease Detected</h3>
+
 
         {% if "Healthy" in disease %}
 
@@ -75,23 +145,35 @@
 
     </div>
 
+
+    <!-- ================================================== -->
     <!-- STATS -->
+    <!-- ================================================== -->
 
     <div class="features">
+
+
+        <!-- CONFIDENCE -->
 
         <div class="feature-card">
 
             <h3>🎯 Confidence</h3>
 
             <h2 style="color:#2e7d32;">
+
                 {{ "%.2f"|format(confidence) }}%
+
             </h2>
 
         </div>
 
+
+        <!-- RELIABILITY -->
+
         <div class="feature-card">
 
             <h3>📊 Reliability</h3>
+
 
             {% if confidence >= 90 %}
 
@@ -99,11 +181,13 @@
                     High Confidence
                 </h2>
 
+
             {% elif confidence >= 70 %}
 
                 <h2 style="color:#f57c00;">
                     Medium Confidence
                 </h2>
+
 
             {% else %}
 
@@ -115,48 +199,64 @@
 
         </div>
 
+
+        <!-- DISEASE SEVERITY -->
+
         <div class="feature-card">
 
-    <h3>🚨 Disease Severity</h3>
+            <h3>🚨 Disease Severity</h3>
 
-    <h2 style="color:{{ severity_color }};">
 
-        {% if severity == "Severe" %}
+            {% if severity == "Severe" %}
 
-            🔴 Severe
+                <h2 style="color:#d32f2f;">
+                    🔴 Severe
+                </h2>
 
-        {% elif severity == "Moderate" %}
 
-            🟡 Moderate
+            {% elif severity == "Moderate" %}
 
-        {% else %}
+                <h2 style="color:#f57c00;">
+                    🟡 Moderate
+                </h2>
 
-            🟢 Low
 
-        {% endif %}
+            {% else %}
 
-    </h2>
+                <h2 style="color:#2e7d32;">
+                    🟢 Low
+                </h2>
 
-</div>
-         <!-- Analysis Time -->
+            {% endif %}
 
-    <div class="feature-card">
+        </div>
 
-        <h3>🕒 Analysis Time</h3>
 
-        <p style="font-size:18px;">
-            {{ analysis_time }}
-        </p>
+        <!-- ANALYSIS TIME -->
+
+        <div class="feature-card">
+
+            <h3>🕒 Analysis Time</h3>
+
+            <p style="font-size:18px;">
+
+                {{ analysis_time }}
+
+            </p>
+
+        </div>
 
     </div>
 
-    </div>
 
+    <!-- ================================================== -->
     <!-- CONFIDENCE BAR -->
+    <!-- ================================================== -->
 
     <div style="margin-top:40px;">
 
         <h3>Prediction Confidence</h3>
+
 
         <div style="
             width:100%;
@@ -165,25 +265,36 @@
             border-radius:20px;
             overflow:hidden;">
 
+
             <div style="
                 width:{{ confidence }}%;
                 height:100%;
 
                 {% if confidence >= 90 %}
-                background:#2e7d32;
+
+                    background:#2e7d32;
+
                 {% elif confidence >= 70 %}
-                background:#f57c00;
+
+                    background:#f57c00;
+
                 {% else %}
-                background:#d32f2f;
+
+                    background:#d32f2f;
+
                 {% endif %}
                 ">
+
             </div>
 
         </div>
 
     </div>
 
+
+    <!-- ================================================== -->
     <!-- TOP 3 PREDICTIONS -->
+    <!-- ================================================== -->
 
     <div class="feature-card"
          style="
@@ -192,10 +303,12 @@
 
         <h3>🏆 Top 3 Predictions</h3>
 
+
         <table style="
                width:100%;
                margin-top:20px;
                border-collapse:collapse;">
+
 
             <tr style="
                 background:#f5f5f5;">
@@ -214,6 +327,7 @@
 
             </tr>
 
+
             {% for item in top3_predictions %}
 
             <tr>
@@ -226,6 +340,7 @@
 
                 </td>
 
+
                 <td style="
                     padding:12px;
                     border-bottom:1px solid #ddd;">
@@ -233,6 +348,7 @@
                     {{ item.name }}
 
                 </td>
+
 
                 <td style="
                     padding:12px;
@@ -250,10 +366,16 @@
 
     </div>
 
-    <!-- REPORT SECTION -->
+
+    <!-- ================================================== -->
+    <!-- DISEASE INFORMATION -->
+    <!-- ================================================== -->
 
     <div class="features"
          style="margin-top:50px;">
+
+
+        <!-- SYMPTOMS -->
 
         <div class="feature-card">
 
@@ -265,6 +387,9 @@
 
         </div>
 
+
+        <!-- TREATMENT -->
+
         <div class="feature-card">
 
             <h3>💊 Treatment</h3>
@@ -274,6 +399,9 @@
             </p>
 
         </div>
+
+
+        <!-- PREVENTION -->
 
         <div class="feature-card">
 
@@ -287,69 +415,93 @@
 
     </div>
 
+
+    <!-- ================================================== -->
     <!-- SMART FARMER RECOMMENDATION -->
+    <!-- ================================================== -->
 
-<div class="feature-card"
-     style="
-     margin-top:50px;
-     padding:35px;
-     text-align:left;">
+    <div class="feature-card"
+         style="
+         margin-top:50px;
+         padding:35px;
+         text-align:left;">
 
-    <h2 style="
-        color:#2e7d32;
-        text-align:center;
-        margin-bottom:30px;">
 
-        🌱 Smart Farmer Recommendation
+        <h2 style="
+            color:#2e7d32;
+            text-align:center;
+            margin-bottom:30px;">
 
-    </h2>
+            🌱 Smart Farmer Recommendation
 
-    <div style="
-        background:#e8f5e9;
-        border-left:6px solid #2e7d32;
-        padding:20px;
-        border-radius:10px;
-        margin-bottom:25px;">
+        </h2>
 
-        <h3 style="color:#2e7d32;">
-            🇬🇧 Recommendation (English)
-        </h3>
 
-        <p style="
-            font-size:17px;
-            line-height:1.8;">
+        <!-- ENGLISH -->
 
-            {{ recommendation_english }}
+        <div style="
+            background:#e8f5e9;
+            border-left:6px solid #2e7d32;
+            padding:20px;
+            border-radius:10px;
+            margin-bottom:25px;">
 
-        </p>
+
+            <h3 style="color:#2e7d32;">
+
+                🇬🇧 Recommendation (English)
+
+            </h3>
+
+
+            <p style="
+                font-size:17px;
+                line-height:1.8;">
+
+                {{ recommendation_english }}
+
+            </p>
+
+        </div>
+
+
+        <!-- HINDI -->
+
+        <div style="
+            background:#fff8e1;
+            border-left:6px solid #ff9800;
+            padding:20px;
+            border-radius:10px;">
+
+
+            <h3 style="color:#ff9800;">
+
+                🇮🇳 किसान सलाह (Hindi)
+
+            </h3>
+
+
+            <p style="
+                font-size:18px;
+                line-height:1.8;">
+
+                {{ recommendation_hindi }}
+
+            </p>
+
+        </div>
 
     </div>
 
-    <div style="
-        background:#fff8e1;
-        border-left:6px solid #ff9800;
-        padding:20px;
-        border-radius:10px;">
 
-        <h3 style="color:#ff9800;">
-            🇮🇳 किसान सलाह (Hindi)
-        </h3>
-
-        <p style="
-            font-size:18px;
-            line-height:1.8;">
-
-            {{ recommendation_hindi }}
-
-        </p>
-
-    </div>
-
-</div>
-
+    <!-- ================================================== -->
     <!-- BUTTONS -->
+    <!-- ================================================== -->
 
     <div style="margin-top:40px;">
+
+
+        <!-- PDF -->
 
         <a href="/download-report"
            style="
@@ -361,9 +513,12 @@
            text-decoration:none;
            margin:10px;">
 
-           📄 Download PDF Report
+            📄 Download PDF Report
 
         </a>
+
+
+        <!-- HISTORY -->
 
         <a href="/history"
            style="
@@ -375,9 +530,12 @@
            text-decoration:none;
            margin:10px;">
 
-           📜 View History
+            📜 View History
 
         </a>
+
+
+        <!-- NEW ANALYSIS -->
 
         <a href="/"
            style="
@@ -389,14 +547,16 @@
            text-decoration:none;
            margin:10px;">
 
-           🔄 Analyze Another Leaf
+            🔄 Analyze Another Leaf
 
         </a>
 
     </div>
 
+
+    {% endif %}
+
 </div>
 
 </body>
 </html>
-
