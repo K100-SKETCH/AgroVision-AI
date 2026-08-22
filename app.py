@@ -1,6 +1,5 @@
 from flask import Flask, render_template, request, send_file, Response
 
-import csv
 import os
 import time
 import sqlite3
@@ -9,9 +8,9 @@ from zoneinfo import ZoneInfo
 import psutil
 
 from reportlab.platypus import (
-SimpleDocTemplate,
-Paragraph,
-Spacer
+    SimpleDocTemplate,
+    Paragraph,
+    Spacer
 )
 
 from reportlab.lib.styles import getSampleStyleSheet
@@ -30,14 +29,13 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 LAST_REPORT = {}
 
-# ==================================================
 
+# ==================================================
 # DATABASE
-
 # ==================================================
-
 
 def init_db():
+
     print("DATABASE INITIALIZED", flush=True)
 
     conn = sqlite3.connect("agrovision.db")
@@ -48,7 +46,7 @@ def init_db():
         CREATE TABLE IF NOT EXISTS history (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             disease TEXT,
-            confidence REAL, 
+            confidence REAL,
             image_path TEXT,
             analysis_time TEXT
         )
@@ -60,24 +58,23 @@ def init_db():
 
 init_db()
 
+
 # ==================================================
-
 # HOME PAGE
-
 # ==================================================
 
 @app.route("/")
 def home():
+
     print("HOME PAGE OPENED", flush=True)
 
     return render_template(
         "index.html"
     )
 
+
 # ==================================================
-
 # MEMORY CHECK
-
 # ==================================================
 
 @app.route("/memory")
@@ -86,8 +83,7 @@ def memory():
     process = psutil.Process()
 
     return {
-        "memory_mb":
-        round(
+        "memory_mb": round(
             process.memory_info().rss / 1024 / 1024,
             2
         )
@@ -95,9 +91,7 @@ def memory():
 
 
 # ==================================================
-
 # IMAGE UPLOAD
-
 # ==================================================
 
 @app.route("/upload", methods=["POST"])
@@ -112,15 +106,26 @@ def upload():
 
     try:
 
+        # ------------------------------------------
+        # GET IMAGE
+        # ------------------------------------------
+
         image = request.files.get("leaf_image")
 
         if not image:
+
             return "No image uploaded"
+
 
         print(
             f"IMAGE RECEIVED: {image.filename}",
             flush=True
         )
+
+
+        # ------------------------------------------
+        # SAVE IMAGE
+        # ------------------------------------------
 
         filepath = os.path.join(
             app.config["UPLOAD_FOLDER"],
@@ -134,26 +139,48 @@ def upload():
             flush=True
         )
 
+
+        # ------------------------------------------
+        # PREDICTION
+        # ------------------------------------------
+
         print(
             "CALLING PREDICT_DISEASE()",
             flush=True
         )
 
         disease, confidence, top3_predictions, validation_error = predict_disease(
-    filepath
-)
+            filepath
+        )
+
+
+        # ------------------------------------------
+        # INVALID IMAGE
+        # ------------------------------------------
+
         if validation_error:
 
-    return render_template(
-        "result.html",
-        validation_error=validation_error,
-        image_path=filepath
-    )
+            print(
+                f"VALIDATION ERROR: {validation_error}",
+                flush=True
+            )
+
+            return render_template(
+                "result.html",
+                validation_error=validation_error,
+                image_path=filepath
+            )
+
 
         print(
             "PREDICTION RETURNED",
             flush=True
         )
+
+
+        # ------------------------------------------
+        # DISEASE INFORMATION
+        # ------------------------------------------
 
         info = DISEASE_INFO.get(
             disease,
@@ -163,6 +190,12 @@ def upload():
                 "prevention": "Information not available"
             }
         )
+
+
+        # ------------------------------------------
+        # RECOMMENDATION
+        # ------------------------------------------
+
         recommendation = RECOMMENDATIONS.get(
             disease,
             {
@@ -171,20 +204,51 @@ def upload():
             }
         )
 
-        confidence = round(confidence, 2)
+
+        # ------------------------------------------
+        # ROUND CONFIDENCE
+        # ------------------------------------------
+
+        confidence = round(
+            confidence,
+            2
+        )
+
+
+        # ------------------------------------------
+        # RELIABILITY + SEVERITY
+        # ------------------------------------------
 
         if confidence >= 90:
+
             reliability = "High Confidence"
+
             severity = "Severe"
+
             severity_color = "#d32f2f"
+
+
         elif confidence >= 70:
+
             reliability = "Medium Confidence"
+
             severity = "Moderate"
+
             severity_color = "#f57c00"
+
+
         else:
+
             reliability = "Low Confidence"
+
             severity = "Low"
+
             severity_color = "#2e7d32"
+
+
+        # ------------------------------------------
+        # ANALYSIS TIME
+        # ------------------------------------------
 
         analysis_time = datetime.now(
             ZoneInfo("Asia/Kolkata")
@@ -192,18 +256,35 @@ def upload():
             "%d-%m-%Y %I:%M %p"
         )
 
+
+        # ------------------------------------------
+        # STORE LAST REPORT
+        # ------------------------------------------
+
         LAST_REPORT = {
+
             "disease": disease,
+
             "confidence": confidence,
+
             "symptoms": info["symptoms"],
+
             "treatment": info["treatment"],
+
             "prevention": info["prevention"],
+
             "analysis_time": analysis_time
         }
 
-        # SAVE TO DATABASE
 
-        conn = sqlite3.connect("agrovision.db")
+        # ------------------------------------------
+        # SAVE TO DATABASE
+        # ------------------------------------------
+
+        conn = sqlite3.connect(
+            "agrovision.db"
+        )
+
         cursor = conn.cursor()
 
         cursor.execute(
@@ -226,29 +307,57 @@ def upload():
         )
 
         conn.commit()
+
         conn.close()
 
+
+        # ------------------------------------------
+        # TOTAL REQUEST TIME
+        # ------------------------------------------
+
         print(
-            f"TOTAL REQUEST TIME: {round(time.time() - start_time, 2)} sec",
+            f"TOTAL REQUEST TIME: "
+            f"{round(time.time() - start_time, 2)} sec",
             flush=True
         )
 
+
+        # ------------------------------------------
+        # RESULT PAGE
+        # ------------------------------------------
+
         return render_template(
+
             "result.html",
+
             disease=disease,
+
             confidence=confidence,
+
             reliability=reliability,
+
             severity=severity,
+
             severity_color=severity_color,
+
             analysis_time=analysis_time,
+
             image_path=filepath,
+
             symptoms=info["symptoms"],
+
             treatment=info["treatment"],
+
             prevention=info["prevention"],
+
             top3_predictions=top3_predictions,
+
             recommendation_english=recommendation["english"],
+
             recommendation_hindi=recommendation["hindi"]
+
         )
+
 
     except Exception as e:
 
@@ -263,10 +372,10 @@ def upload():
         )
 
         return f"ERROR: {str(e)}"
+
+
 # ==================================================
-
 # PDF REPORT
-
 # ==================================================
 
 @app.route("/download-report")
@@ -274,7 +383,9 @@ def download_report():
 
     pdf_file = "AgroVision_Report.pdf"
 
-    doc = SimpleDocTemplate(pdf_file)
+    doc = SimpleDocTemplate(
+        pdf_file
+    )
 
     styles = getSampleStyleSheet()
 
@@ -288,17 +399,20 @@ def download_report():
         Spacer(1, 20),
 
         Paragraph(
-            f"Disease: {LAST_REPORT.get('disease', 'N/A')}",
+            f"Disease: "
+            f"{LAST_REPORT.get('disease', 'N/A')}",
             styles["Normal"]
         ),
 
         Paragraph(
-            f"Confidence: {LAST_REPORT.get('confidence', 'N/A')}%",
+            f"Confidence: "
+            f"{LAST_REPORT.get('confidence', 'N/A')}%",
             styles["Normal"]
         ),
 
         Paragraph(
-            f"Date: {LAST_REPORT.get('analysis_time', 'N/A')}",
+            f"Date: "
+            f"{LAST_REPORT.get('analysis_time', 'N/A')}",
             styles["Normal"]
         ),
 
@@ -349,17 +463,20 @@ def download_report():
 
     ]
 
-    doc.build(content)
+
+    doc.build(
+        content
+    )
+
 
     return send_file(
         pdf_file,
         as_attachment=True
     )
 
+
 # ==================================================
-
 # HISTORY PAGE
-
 # ==================================================
 
 @app.route("/history")
@@ -387,19 +504,28 @@ def history():
 
     conn.close()
 
+
     return render_template(
         "history.html",
         records=records
     )
 
+
+# ==================================================
+# DOWNLOAD CSV
+# ==================================================
+
 @app.route("/download-csv")
 def download_csv():
 
-    conn = sqlite3.connect("agrovision.db")
+    conn = sqlite3.connect(
+        "agrovision.db"
+    )
 
     cursor = conn.cursor()
 
-    cursor.execute("""
+    cursor.execute(
+        """
         SELECT
             disease,
             confidence,
@@ -407,32 +533,53 @@ def download_csv():
             analysis_time
         FROM history
         ORDER BY id DESC
-    """)
+        """
+    )
 
     rows = cursor.fetchall()
 
     conn.close()
 
+
     def generate():
 
-        yield "Disease,Confidence,Image Path,Analysis Time\n"
+        yield (
+            "Disease,"
+            "Confidence,"
+            "Image Path,"
+            "Analysis Time\n"
+        )
+
 
         for row in rows:
 
-            yield f"{row[0]},{row[1]},{row[2]},{row[3]}\n"
+            yield (
+                f"{row[0]},"
+                f"{row[1]},"
+                f"{row[2]},"
+                f"{row[3]}\n"
+            )
+
 
     return Response(
+
         generate(),
+
         mimetype="text/csv",
+
         headers={
             "Content-Disposition":
-            "attachment; filename=agrovision_history.csv"
+            "attachment; "
+            "filename=agrovision_history.csv"
         }
+
     )
+
 
 # ==================================================
 # DASHBOARD
 # ==================================================
+
 @app.route("/dashboard")
 def dashboard():
 
@@ -455,20 +602,29 @@ def dashboard():
 
     conn.close()
 
-    total_analyses = len(records)
+
+    total_analyses = len(
+        records
+    )
 
     healthy_count = 0
+
     diseased_count = 0
 
     total_confidence = 0
 
     disease_stats = {}
 
+
     for disease, confidence in records:
 
         total_confidence += confidence
 
-        # Disease count for pie chart
+
+        # ------------------------------------------
+        # Disease count
+        # ------------------------------------------
+
         if disease in disease_stats:
 
             disease_stats[disease] += 1
@@ -477,7 +633,11 @@ def dashboard():
 
             disease_stats[disease] = 1
 
-        # Healthy vs Diseased count
+
+        # ------------------------------------------
+        # Healthy vs Diseased
+        # ------------------------------------------
+
         if "healthy" in disease.lower():
 
             healthy_count += 1
@@ -486,16 +646,30 @@ def dashboard():
 
             diseased_count += 1
 
+
+    # ------------------------------------------
+    # Average confidence
+    # ------------------------------------------
+
     if total_analyses > 0:
 
         average_confidence = round(
-            total_confidence / total_analyses,
+
+            total_confidence /
+            total_analyses,
+
             2
+
         )
 
     else:
 
         average_confidence = 0
+
+
+    # ------------------------------------------
+    # Chart data
+    # ------------------------------------------
 
     chart_labels = list(
         disease_stats.keys()
@@ -505,37 +679,46 @@ def dashboard():
         disease_stats.values()
     )
 
+
     return render_template(
+
         "dashboard.html",
+
         total_analyses=total_analyses,
+
         healthy_count=healthy_count,
+
         diseased_count=diseased_count,
+
         average_confidence=average_confidence,
+
         chart_labels=chart_labels,
+
         chart_values=chart_values
+
     )
 
+
 # ==================================================
-
 # TEST
-
 # ==================================================
 
 @app.route("/test")
 def test():
+
     return "Flask is working"
 
 
 # ==================================================
-
 # RUN
-
 # ==================================================
 
 if __name__ == "__main__":
 
     app.run(
-        host="0.0.0.0",
-        port=10000
-    )
 
+        host="0.0.0.0",
+
+        port=10000
+
+    )
