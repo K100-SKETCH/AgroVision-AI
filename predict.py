@@ -7,6 +7,8 @@ import numpy as np
 from PIL import Image
 from tensorflow.keras.models import load_model
 
+from leaf_validator import validate_leaf
+
 print("Loading model...", flush=True)
 
 model = load_model(
@@ -39,6 +41,24 @@ def predict_disease(image_path):
 
     print("=" * 60, flush=True)
     print("FUNCTION ENTERED", flush=True)
+
+    # -----------------------------------------
+# VALIDATE IMAGE
+# -----------------------------------------
+
+is_leaf, validation_message = validate_leaf(
+    image_path
+)
+
+if not is_leaf:
+
+    print(
+        "IMAGE REJECTED:",
+        validation_message,
+        flush=True
+    )
+
+    return None, 0, [], validation_message
 
     img = Image.open(image_path).convert("RGB")
 
@@ -102,4 +122,4 @@ def predict_disease(image_path):
         flush=True
     )
 
-    return disease, confidence, top3_predictions
+    return disease, confidence, top3_predictions, None
