@@ -1,5 +1,6 @@
 import tensorflow as tf
 
+# Limit TensorFlow threads for deployment
 tf.config.threading.set_inter_op_parallelism_threads(1)
 tf.config.threading.set_intra_op_parallelism_threads(1)
 
@@ -7,9 +8,8 @@ import numpy as np
 from PIL import Image
 from tensorflow.keras.models import load_model
 
-from leaf_validator import validate_leaf
 
-print("Loading model...", flush=True)
+print("Loading AgroVision AI model...", flush=True)
 
 model = load_model(
     "model/agrovision_best_model.h5",
@@ -17,6 +17,11 @@ model = load_model(
 )
 
 print("Model loaded successfully", flush=True)
+
+
+# ============================================================
+# CLASS NAMES
+# ============================================================
 
 CLASS_NAMES = [
     "Pepper Bell Bacterial Spot",
@@ -37,89 +42,156 @@ CLASS_NAMES = [
 ]
 
 
+# ============================================================
+# PREDICTION FUNCTION
+# ============================================================
+
 def predict_disease(image_path):
 
     print("=" * 60, flush=True)
-    print("FUNCTION ENTERED", flush=True)
+    print("PREDICTION FUNCTION ENTERED", flush=True)
 
-    # -----------------------------------------
-# VALIDATE IMAGE
-# -----------------------------------------
+    try:
 
-is_leaf, validation_message = validate_leaf(
-    image_path
-)
+        # ----------------------------------------------------
+        # OPEN IMAGE
+        # ----------------------------------------------------
 
-if not is_leaf:
+        img = Image.open(image_path).convert("RGB")
 
-    print(
-        "IMAGE REJECTED:",
-        validation_message,
-        flush=True
-    )
+        print("IMAGE OPENED SUCCESSFULLY", flush=True)
 
-    return None, 0, [], validation_message
+        # ----------------------------------------------------
+        # BASIC IMAGE VALIDATION
+        # ----------------------------------------------------
 
-    img = Image.open(image_path).convert("RGB")
+        width, height = img.size
 
-    img = img.resize((224, 224))
-
-    x = np.array(img).astype(np.float32)
-
-    x = np.expand_dims(
-        x,
-        axis=0
-    )
-
-    print("BEFORE MODEL CALL", flush=True)
-
-    pred = model(
-        x,
-        training=False
-    )
-
-    print("MODEL CALL FINISHED", flush=True)
-
-    pred = pred.numpy()
-
-    print("NUMPY CONVERSION FINISHED", flush=True)
-
-    predicted_index = int(
-        np.argmax(pred[0])
-    )
-
-    confidence = float(
-        np.max(pred[0]) * 100
-    )
-
-    disease = CLASS_NAMES[predicted_index]
-
-    # TOP 3 PREDICTIONS
-
-    top3_indices = pred[0].argsort()[-3:][::-1]
-
-    top3_predictions = []
-
-    for idx in top3_indices:
-
-        top3_predictions.append(
-            {
-                "name": CLASS_NAMES[idx],
-                "confidence": round(
-                    float(pred[0][idx] * 100),
-                    2
-                )
-            }
+        print(
+            f"IMAGE SIZE: {width} x {height}",
+            flush=True
         )
 
-    print(
-        f"DISEASE = {disease}",
-        flush=True
-    )
+        # Reject extremely small images
+        if width < 100 or height < 100:
 
-    print(
-        f"CONFIDENCE = {confidence}",
-        flush=True
-    )
+            validation_message = (
+                "The uploaded image is too small. "
+                "Please upload a clear image of a tomato, "
+                "potato, or bell pepper leaf."
+            )
 
-    return disease, confidence, top3_predictions, None
+            return None, 0, [], validation_message
+
+        # ----------------------------------------------------
+        # RESIZE IMAGE
+        # ----------------------------------------------------
+
+        img = img.resize((224, 224))
+
+        x = np.array(img).astype(np.float32)
+
+        x = np.expand_dims(
+            x,
+            axis=0
+        )
+
+        print("IMAGE PREPARED", flush=True)
+
+        # ----------------------------------------------------
+        # MODEL PREDICTION
+        # ----------------------------------------------------
+
+        print("CALLING MODEL...", flush=True)
+
+        pred = model(
+            x,
+            training=False
+        )
+
+        print("MODEL CALL FINISHED", flush=True)
+
+        pred = pred.numpy()
+
+        print("NUMPY CONVERSION FINISHED", flush=True)
+
+        # ----------------------------------------------------
+        # PREDICTION
+        # ----------------------------------------------------
+
+        predicted_index = int(
+            np.argmax(pred[0])
+        )
+
+        confidence = float(
+            np.max(pred[0]) * 100
+        )
+
+        disease = CLASS_NAMES[predicted_index]
+
+        # ----------------------------------------------------
+        # TOP 3 PREDICTIONS
+        # ----------------------------------------------------
+
+        top3_indices = pred[0].argsort()[-3:][::-1]
+
+        top3_predictions = []
+
+        for idx in top3_indices:
+
+            top3_predictions.append(
+                {
+                    "name": CLASS_NAMES[idx],
+                    "confidence": round(
+                        float(pred[0][idx] * 100),
+                        2
+                    )
+                }
+            )
+
+        # ----------------------------------------------------
+        # LOGGING
+        # ----------------------------------------------------
+
+        print(
+            f"DISEASE = {disease}",
+            flush=True
+        )
+
+        print(
+            f"CONFIDENCE = {confidence}",
+            flush=True
+        )
+
+        print("=" * 60, flush=True)
+
+        # ----------------------------------------------------
+        # RETURN SUCCESS
+        # ----------------------------------------------------
+
+        return (
+            disease,
+            confidence,
+            top3_predictions,
+            None
+        )
+
+    except Exception as e:
+
+        print(
+            f"PREDICTION ERROR: {str(e)}",
+            flush=True
+        )
+
+        validation_message = (
+            "Unable to process this image. "
+            "Please upload a clear image of a tomato, "
+            "potato, or bell pepper leaf."
+        )
+
+        return (
+            None,
+            0,
+            [],
+            validation_message
+        )
