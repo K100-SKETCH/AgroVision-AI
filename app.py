@@ -139,9 +139,16 @@ def upload():
             flush=True
         )
 
-        disease, confidence, top3_predictions = predict_disease(
-            filepath
-        )
+        disease, confidence, top3_predictions, validation_error = predict_disease(
+    filepath
+)
+        if validation_error:
+
+    return render_template(
+        "result.html",
+        validation_error=validation_error,
+        image_path=filepath
+    )
 
         print(
             "PREDICTION RETURNED",
